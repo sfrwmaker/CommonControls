@@ -1,4 +1,4 @@
-# Common Controlsl ibrary for arduino projects
+# Common Controls ibrary for arduino projects
 Contains the following classes:
 - Backlight to manage the LCD display backlight intensivity
 - Button to manage the push button
