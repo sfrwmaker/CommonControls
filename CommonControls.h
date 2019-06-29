@@ -61,14 +61,15 @@ class BUTTON {
 class SWITCH {
     public:
         SWITCH(uint8_t SwitchPIN);
-        void        init(uint32_t switch_time = 500);
+        void        init(uint32_t on_to = 500, uint32_t off_to = 500);
         bool        status(void);
     private:
-        bool        mode;                           // The switch mode on (true)/off
-        uint16_t    over_press;                     // Maximum time in ms the button can be pressed
-        uint32_t    pt;                             // Time in ms when the switch status changed
         uint8_t     switch_pin;                     // The pin number connected to the button
-        uint32_t    bounce      = 500;              // Status change interval (ms)
+        bool        mode;                           // The switch mode on (true)/off
+        bool        last_mode;                      // The mode measured last time
+        uint32_t    pt;                             // Time in ms when the switch status changed
+        uint32_t    on_time  = 500;                 // Turn on  interval (ms)
+        uint32_t    off_time = 500;                 // Turn off interval (ms)    
 };
 
 //------------------------------------------ class ENCODER ------------------------------------------------------

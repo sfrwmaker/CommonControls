@@ -178,21 +178,28 @@ SWITCH::SWITCH(uint8_t SwitchPIN) {
     switch_pin    = SwitchPIN;
 }
 
-void SWITCH::init(uint32_t switch_time) {
-    bounce = switch_time;
+void SWITCH::init(uint32_t on_to, uint32_t off_to) {
+    on_time     = on_to;
+    off_time    = off_to;
     pinMode(switch_pin, INPUT_PULLUP);
-    mode = digitalRead(switch_pin);
+    last_mode = mode = digitalRead(switch_pin);
+    pt = 0;
 }
 
 bool SWITCH::status(void) {
     bool sw_on = digitalRead(switch_pin);           // Read the current state of the switch
     uint32_t now_t = millis();
-    if (mode == sw_on) {                            // The mode does not changed
-        return mode;
-    } else {                                        // The mode has been changed
-        if ((now_t - pt) < bounce) return mode;     // Prevent bouncing, return previous state
+    if (last_mode != sw_on) {                       // Mode changed ftom last time
         pt = now_t;
-        mode = sw_on;
+        last_mode   = sw_on;
+    } else {
+        uint32_t switch_time    = off_time;
+        if (sw_on) switch_time  = on_time;
+        if (pt == 0) pt = now_t;
+        if ((now_t - pt) >= switch_time) {          // Time to change mode
+            mode = sw_on;
+            pt = 0;
+        }
     }
     return mode;
 }
